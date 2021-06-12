@@ -1,0 +1,31 @@
+.App {
+    width: 1100px;
+    margin: auto;
+}
+.header {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.main {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid whitesmoke;
+    padding: 20px;
+}
+.userName {
+    flex: 1;
+    margin-left: 20px;
+}
+.main button {
+    border-radius: 5px;
+    border: 1px outset seashell;
+    background-color: seashell;
+    cursor: pointer;
+}
+.main input {
+    cursor: pointer;
+}

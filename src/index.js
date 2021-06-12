@@ -1,17 +1,58 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import App from "./App";
+import {applyMiddleware, createStore} from "redux";
+import thunk from "redux-thunk";
+import {Provider} from "react-redux";
 
+
+const initialState = {
+    users: [{
+        offLine: true
+    }],
+
+}
+
+const reducer = ((state = initialState, action) => {
+    switch (action.type) {
+        case 'users':
+            return {
+                ...state,
+                users: action.payload
+            };
+        case 'delete':
+            return {
+                ...state,
+                users: state.users.filter((user) => user.id !== action.payload)
+            };
+        case 'checked':
+            return {
+                ...state,
+                users: state.users.map((user) => {
+                    if (user.id === action.payload) {
+                        return {
+                            ...user,
+                            offLine: !user.offLine
+                        }
+                    }
+
+                    return user
+                })
+            }
+
+        default: {
+            return state
+        }
+    }
+})
+const store = createStore(reducer, applyMiddleware(thunk))
+console.log(initialState)
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <Provider store={store}>
+          <App />
+      </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
