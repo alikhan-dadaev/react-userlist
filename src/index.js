@@ -7,9 +7,8 @@ import {Provider} from "react-redux";
 
 
 const initialState = {
-    users: [{
-        offLine: true
-    }],
+    users: [],
+    offLine: true
 
 }
 
@@ -18,14 +17,10 @@ const reducer = ((state = initialState, action) => {
         case 'users':
             return {
                 ...state,
-                users: action.payload
+                users: action.payload,
+                loading: false
             };
-        case 'delete':
-            return {
-                ...state,
-                users: state.users.filter((user) => user.id !== action.payload)
-            };
-        case 'checked':
+        case 'check':
             return {
                 ...state,
                 users: state.users.map((user) => {
@@ -36,9 +31,34 @@ const reducer = ((state = initialState, action) => {
                         }
                     }
 
+                    return user;
+                })
+            }
+
+        case 'start_deleting':
+            return {
+                ...state,
+                users: state.users.map(user => {
+                    if (user.id ===action.payload) {
+                        return{
+                            ...user,
+                            deleting: true
+                        }
+                    }
+
                     return user
                 })
             }
+        case 'delete':
+            return {
+                ...state,
+                users: state.users.filter((user) => user.id !== action.payload)
+            };
+            case 'start':
+            return {
+                ...state,
+                loading: true
+            };
 
         default: {
             return state
@@ -46,7 +66,9 @@ const reducer = ((state = initialState, action) => {
     }
 })
 const store = createStore(reducer, applyMiddleware(thunk))
+
 console.log(initialState)
+
 ReactDOM.render(
   <React.StrictMode>
       <Provider store={store}>

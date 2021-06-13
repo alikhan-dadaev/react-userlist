@@ -1,10 +1,13 @@
 import {checkUser, loadUsers, removeUser} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import './style.css'
 
 function App() {
   const user = useSelector(state => state.users);
+
+  const loading = useSelector(state => state.loading)
+
 
   const dispatch = useDispatch();
 
@@ -16,31 +19,39 @@ function App() {
     dispatch(removeUser(id))
   }
 
-  const handleCheck = (id, offLine) => {
-    dispatch(checkUser(id, offLine))
+  const handleChange = (id, offLine) => {
+      dispatch(checkUser(id, offLine))
   }
+
 
   return (
     <div className="App">
       <div className="header">
         Список пользователей
       </div>
-      {user.map(item => {
+      <div className="loading">
+        {loading ? 'Идет загрузка....': (user.map(item => {
         return(
             <div className="main">
-              <input
-                  type="checkbox"
-                  checked={item.id}
-                  onChange={() => handleCheck(item.id, item.offline)}/>
+                <input
+                    type="checkbox"
+                    checked={user.offline}
+                    onChange={() => handleChange (user.id, user.offLine)}
+                />
               <div className="userName">
                 {item.name}
               </div>
-              <button onClick={() => handleDelete(item.id)}>
+              <button
+                  onClick={() => handleDelete(item.id)}
+                  disabled={item.deleting}
+              >
                 Удалить пользователя
               </button>
             </div>
         )
-      })}
+      }))}
+      </div>
+
     </div>
   );
 }

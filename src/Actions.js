@@ -1,5 +1,6 @@
 export const loadUsers = () =>{
     return (dispatch) => {
+        dispatch({type: 'start'})
         fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
         .then((json) => {
@@ -13,6 +14,7 @@ export const loadUsers = () =>{
 
 export const removeUser = (id) => {
     return (dispatch) => {
+        dispatch({type: 'start_deleting', payload: id})
         fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
             method: 'DELETE',
         })
@@ -27,20 +29,20 @@ export const removeUser = (id) => {
 }
 
 export const checkUser = (id, offLine) => {
-    return (dispatch) => {
+    return function (dispatch) {
         fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
             method: 'PATCH',
             body: JSON.stringify({offLine: !offLine}),
             headers: {
-                'Content-type': "application/json"
+                "Content-type": "application/json"
             }
         })
-            .then(response => response.json())
+            .then((response) => response.json())
             .then((json) => {
-               dispatch ({
-                   type: 'checked',
-                   payload: id
-               })
+                dispatch({
+                    type: 'check',
+                    payload: id
+                })
             })
     }
 }
